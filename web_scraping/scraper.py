@@ -12,7 +12,7 @@ import pandas as pd
 from random import randint
 
 # open shuffled movie id list
-id_list = pd.read_csv('movieid_shuffle.csv', encoding='ascii')
+df = pd.read_csv('movieid_shuffle.csv', encoding='ascii')
 
 # connect to database
 connection = psycopg2.connect(
@@ -206,6 +206,9 @@ def insert_rows(df):
     t3 = time.perf_counter()
     total = t3 - t
     print(f"Scraped {len(id_list)} movies in {round(total,2)} seconds")
+
+id_list = [row for row in df.iloc[:, 1]]
+df2 = imdb_scraper(id_list)
 
 # close connection
 if connection:

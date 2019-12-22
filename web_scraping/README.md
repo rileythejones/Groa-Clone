@@ -92,15 +92,9 @@ Clone the repo which holds the scraper
 git clone https://github.com/Lambda-School-Labs/Groa.git
 ```
 
-CD into the repo
-```
-cd Groa
-```
-
 CD into the scraper folder
-
 ```
-cd web_scraping
+cd Groa/web_scraping
 ```
 
 Installing pipenv
@@ -133,7 +127,7 @@ pip3 install psycopg2-binary
 
 Run:
 ```
-python scraper[].py
+python scraper.py
 ```
 
 ## Built With
