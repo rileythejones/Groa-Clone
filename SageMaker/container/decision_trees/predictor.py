@@ -59,7 +59,7 @@ class ScoringService(object):
                 except KeyError:
                     continue
 
-            return np.mean(movie_vec, axis=0)
+            return np.mean(movie_vec, axis=0)[0]
 
         def _similar_movies(v, n = 6):
             # extract most similar movies for the input vector
