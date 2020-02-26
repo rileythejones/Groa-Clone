@@ -19,12 +19,18 @@ def df_to_id_list(df, id_book):
     for matches.
     """
     df['Year'] = df['Year'].astype(int).astype(str)
+    """ riley edit """
     matched = pd.merge(df, id_book,
                 left_on=['Name', 'Year'], right_on=['primaryTitle', 'startYear'],
                 how='inner')
+#     matched = pd.merge(df, id_book,
+#                 left_on=['Title', 'Year'], right_on=['primaryTitle', 'startYear'],
+#                 how='inner')
     ids = matched['tconst'].astype(str).tolist()
     final_ratings = []
+    """ riley edit """
     names = df.Name.tolist()
+#     names = df.Title.tolist()
     years = [int(year) for year in df.Year.tolist()]
     if 'Rating' in df.columns:
         stars = [int(rating) for rating in df.Rating.tolist()]
@@ -38,7 +44,7 @@ def df_to_id_list(df, id_book):
         try:
             cursor_dog.execute(f"""
                 SELECT movie_id, original_title, primary_title
-                FROM movies
+                FROM imdb_movies
                 WHERE primary_title ILIKE '{i}' AND start_year = {j}
                   OR original_title ILIKE '{i}' AND start_year = {j}
                 ORDER BY runtime_minutes DESC
@@ -107,6 +113,11 @@ def prep_data(ratings_df, watched_df=None, watchlist_df=None,
         good_list = good_df['movie_id'].to_list()
         bad_list = bad_df['movie_id'].to_list()
         neutral_list = neutral_df['movie_id'].to_list()
+        """ add rileys code """
+#         good_list, good_dict = df_to_id_list(good_df, id_book)
+#         bad_list, bad_dict = df_to_id_list(bad_df, id_book)
+#         neutral_list, neutral_dict = df_to_id_list(neutral_df, id_book)
+        
     except Exception as e:
         # can't read the dataframe as Letterboxd or IMDb user data
         print("This dataframe has columns:", ratings_df.columns)

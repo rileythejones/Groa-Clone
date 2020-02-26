@@ -1,10 +1,11 @@
 from helpers import fill_id, df_to_id_list, prep_data
 import os 
 import psycopg2
-import re
 import pandas as pd
 import numpy as np
-import gensim 
+import gensim
+from dotenv import load_dotenv
+load_dotenv()
 import warnings;
 warnings.filterwarnings('ignore')
 
@@ -18,16 +19,21 @@ class Recommender(object):
 
     def connect_db(self):
         """connect to database, create cursor."""
-        # connect to database
         connection = psycopg2.connect(
-            database  = "postgres",
-            user      = "postgres",
-            password  = ,
-            host      = 
-            port      = '5432'
+            database  = os.getenv("DB_NAME"),
+            user      = os.getenv("DB_USER"),
+            password  = os.getenv("DB_PASSWORD"),
+            host      = os.getenv("DEV"),
+            port      = os.getenv("PORT")
         )
-        self.connection = connection
-        self.cursor_dog = connection.cursor()
+        # create cursor that is used throughout
+        try:
+            self.cursor_dog = connection.cursor()
+            self.connection = connection  
+            print("Connected!")
+        except Exception as e:
+            print("Connection problem chief!\n")
+            print(e)
 
     def _get_model(self):
         """Get the model object for this instance, loading it if it's not already loaded."""
@@ -45,8 +51,8 @@ class Recommender(object):
         try:
             info_query = f"""
             SELECT m.primary_title, m.start_year, r.average_rating, r.num_votes
-            FROM movies m
-            JOIN ratings r ON m.movie_id = r.movie_id
+            FROM imdb_movies m
+            JOIN imdb_ratings r ON m.movie_id = r.movie_id
             WHERE m.movie_id = '{id}'"""
             self.cursor_dog.execute(info_query)
         except Exception as e:
